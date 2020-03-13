@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>aspnet-Ubigrade.Application-900BD7AB-14A0-45B5-9CF2-A499A80E9697</UserSecretsId>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Admin.Directory.directory_v1" Version="1.43.0.1736" />
+    <PackageReference Include="Google.Apis.Classroom.v1" Version="1.43.0.1871" />
+    <PackageReference Include="Google.Apis.CloudResourceManager.v1" Version="1.44.0.1873" />
+    <PackageReference Include="Google.Apis.People.v1" Version="1.25.0.830" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Controllers\Course\" />
+  </ItemGroup>
+
+</Project>
