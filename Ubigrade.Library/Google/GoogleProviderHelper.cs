@@ -56,7 +56,7 @@ namespace Ubigrade.Library.Google
         public const string EmailAddressFieldName = ProviderName + "Email";
         public const string NameFieldName = ProviderName + "Name";
 
-        internal static UserCredential CreateUserCredential(ClaimsPrincipal principal)
+        public static UserCredential CreateUserCredential(ClaimsPrincipal principal)
         {
             var initializer = new GoogleAuthorizationCodeFlow.Initializer
             {

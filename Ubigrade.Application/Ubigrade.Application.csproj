@@ -24,7 +24,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Controllers\Course\" />
+    <ProjectReference Include="..\Ubigrade.Library\Ubigrade.Library.csproj" />
   </ItemGroup>
 
 </Project>
