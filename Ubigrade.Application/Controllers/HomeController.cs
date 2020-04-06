@@ -43,14 +43,14 @@ namespace Ubigrade.Application.Controllers
 
         [Route("getclasses")]
         public async Task<IActionResult> GetClasses()
-        {
+        { 
             var userFromManager = await _userManager.GetUserAsync(User);
-
             UserCredential credential = GoogleProviderHelper.CreateUserCredential(User);
             var x = await GetAllStudentActiveCourses(credential);
             var y = JsonConvert.SerializeObject(x);
             return Content(y);
         }
+
         [Route("getstudents")]
         public async Task<IActionResult> GetStudentsOfCourse()
         {
