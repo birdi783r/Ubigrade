@@ -86,6 +86,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            //problem hier bei nip io adresse. ^
             if (result.Succeeded)
             {
                 // Store the access token and resign in so the token is included in

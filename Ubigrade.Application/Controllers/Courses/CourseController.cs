@@ -25,7 +25,7 @@ namespace Ubigrade.Application.Controllers.Courses
         public const string GoogleClientId = "519381508568-vqa2fm3s18r49oj94s6g6gjmnbbcsb8n.apps.googleusercontent.com";
         public const string GoogleClientSecret = "91rCz39YBzAB5jmedbWEnHs5";
         public const string Token = "{\"access_token\":\"ya29.Il_BB84Mlh0G8D5fSZyI3si_TuF1U2OPSomjfncwllzdLdyo-83EJBBCtNSvCIu6UVvEGX6_6AxC-fIlMzyCXIlr4r86ynHbWb1_-bbsScKllfrXrMdoTuZ34kUFmRaoWA\",\"token_type\":null,\"expires_in\":3599,\"refresh_token\":\"1//03JQhCdANdESsCgYIARAAGAMSNwF-L9Ir7CKVFLvVMlzXMdmeETAyIObEux8PDdjSZb6oKQNEFC_KEgQ4Cgbj51FTH_2oqNcC_Wg\",\"scope\":null,\"id_token\":null,\"Issued\":\"2020-03-06T21:51:01+01:00\",\"IssuedUtc\":\"2020-03-06T21:51:01+01:00\"}";
-
+        //{\"access_token\":\"ya29.Il_BB84Mlh0G8D5fSZyI3si_TuF1U2OPSomjfncwllzdLdyo-83EJBBCtNSvCIu6UVvEGX6_6AxC-fIlMzyCXIlr4r86ynHbWb1_-bbsScKllfrXrMdoTuZ34kUFmRaoWA\",\"token_type\":null,\"expires_in\":3599,\"refresh_token\":\"1//03JQhCdANdESsCgYIARAAGAMSNwF-L9Ir7CKVFLvVMlzXMdmeETAyIObEux8PDdjSZb6oKQNEFC_KEgQ4Cgbj51FTH_2oqNcC_Wg\",\"scope\":null,\"id_token\":null,\"Issued\":\"2020-03-06T21:51:01+01:00\",\"IssuedUtc\":\"2020-03-06T21:51:01+01:00\"}
         public class Data
         {
             public TokenResponse Token { get; set; }
@@ -35,7 +35,6 @@ namespace Ubigrade.Application.Controllers.Courses
         // ubigrade19-20 accesstoken ya29.a0Adw1xeW9JU5qn-Qe27xun1ejJ6ebLluqoFBMCAfHhaASLRT3S2GdqAEg_kAhQ9bSp3rwvbn4a4eEHCQT4L0giqFoRSftfQWcsPSdD7CnxQsDulM3YasZRzxsBr7LkvdmFOaGuPj6xkiENhnCVBXbq-mjst4e3KSwKH8
         // GET: api/Course
         [Route("courses")]
-
         [HttpGet]
         public async Task<List<Course>> Get(TokenResponse token)
         {
@@ -49,7 +48,7 @@ namespace Ubigrade.Application.Controllers.Courses
         public string Get(int id)
         {
 
-            return "";
+            return "test";
         }
 
         // POST: api/Course

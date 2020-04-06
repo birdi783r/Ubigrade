@@ -49,7 +49,7 @@ namespace Ubigrade.Application
         {
             services.AddDbContext<UbigradeDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("UbigradeServer2")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<UbigradeDbContext>().AddSignInManager<GoogleAwareSignInManager>();
             services.AddControllersWithViews();
@@ -57,8 +57,8 @@ namespace Ubigrade.Application
             services.AddAuthentication()
                .AddGoogle(options =>
                {
-                   options.ClientId = "519381508568-vqa2fm3s18r49oj94s6g6gjmnbbcsb8n.apps.googleusercontent.com";
-                   options.ClientSecret = "91rCz39YBzAB5jmedbWEnHs5";
+                   options.ClientId = "519381508568-vtbjnd18kib10044i4i4e2ot4l6nu8ca.apps.googleusercontent.com";
+                   options.ClientSecret = "l_FocfSrofdeoh3bFuS6r4Qt";
                    foreach (var s in scopes)
                    {
                        options.Scope.Add(s);
@@ -72,17 +72,22 @@ namespace Ubigrade.Application
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+            //{
+            //    //teste grad ob developement fehler ned kommt wenn ich das auskommentier
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseDatabaseErrorPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
+            if (env.IsProduction())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                //app.UseHostFiltering();
+            } 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
