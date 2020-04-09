@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Ubigrade.Application.Models.SchuelerModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Checkpersonnumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Geschlecht)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAdresse)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Schuljahr)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Checkpersonnumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Geschlecht)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailAdresse)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Schuljahr)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

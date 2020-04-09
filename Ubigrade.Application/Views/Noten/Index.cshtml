@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Ubigrade.Application.Models.NotenModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bezeichnung)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mindestanforderung)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bezeichnung)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mindestanforderung)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.NId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.NId }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.NId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

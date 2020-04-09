@@ -49,7 +49,7 @@ namespace Ubigrade.Application
         {
             services.AddDbContext<UbigradeDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("UbigradeServer2")));
+                    Configuration.GetConnectionString("UbigradeServer")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<UbigradeDbContext>().AddSignInManager<GoogleAwareSignInManager>();
             services.AddControllersWithViews();
