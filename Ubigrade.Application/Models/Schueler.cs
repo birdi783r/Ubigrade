@@ -9,7 +9,7 @@ namespace Ubigrade.Application.Models
     public class SchuelerModel
     {
         [Display(Name = "Schueler ID:")]
-        [Range(1, 50, ErrorMessage = "Sie müssen einen gültigen Wert eingeben (1-50)")]
+        //[Range(1, 50, ErrorMessage = "Sie müssen einen gültigen Wert eingeben (1-50)")]
         [Required(ErrorMessage = "Geben Sie eine ID")]
         public int Checkpersonnumber { get; set; }
 

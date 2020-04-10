@@ -15,7 +15,7 @@ namespace Ubigrade.Library.Processors
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgresServer"].ConnectionString))
+                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
                 {
                     NpgsqlCommand command;
                     var x = geschlecht.ToUpper();
