@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -10,18 +11,19 @@ using Ubigrade.Library.Processors;
 
 namespace Ubigrade.Application.Controllers.API_Controller
 {
-    [Route("api/Schueler")]
+    [Route("api/schueler")]
     [ApiController]
-    public class SchuelersController : ControllerBase
+    public class SchuelersController : ControllerBase 
     {
+        public string conString = ConfigurationManager.ConnectionStrings["UbiServer"].ConnectionString;
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SchuelerModel>>> GetSchuelers()
         {
             try
             {
-                await Task.Delay(10);
-
-                var data = SchuelerProcessor.LoadSchueler();
+                //var x = conString;
+                var data = await SchuelerProcessor.LoadSchuelerAsync(conString);
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
                 foreach (var item in data)

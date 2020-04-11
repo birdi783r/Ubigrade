@@ -13,11 +13,11 @@ namespace Ubigrade.Application.Controllers
     public class SchuelerController : Controller
     {
         // GET: Schueler
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             try
             {
-                var data = SchuelerProcessor.LoadSchueler();
+                var data = await SchuelerProcessor.LoadSchuelerAsync("");
 
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
@@ -52,7 +52,8 @@ namespace Ubigrade.Application.Controllers
         // GET: Schueler/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new SchuelerModel();
+            return View(model);
         }
 
         // POST: Schueler/Create

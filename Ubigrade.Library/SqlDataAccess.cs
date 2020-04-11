@@ -8,7 +8,7 @@ namespace Ubigrade.Library
     {
         public static string GetConnectionString()
         {
-            return "Host=193.170.162.38;Username=postgres;Password=Ubigrade1;Database=ubigrade";
+            return "Host=172.16.231.38;Username=postgres;Password=Ubigrade1;Database=ubigrade";
         }
     }
 }

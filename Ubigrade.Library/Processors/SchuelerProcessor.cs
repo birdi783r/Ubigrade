@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
+using System.Threading.Tasks;
 using Ubigrade.Library.Models;
 
 namespace Ubigrade.Library.Processors
@@ -35,9 +36,11 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static List<SchuelerDLModel> LoadSchueler()
+        public async static Task<List<SchuelerDLModel>> LoadSchuelerAsync(string sql)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+            List<SchuelerDLModel> list = new List<SchuelerDLModel>();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(sql))
             {
                 ListeSchueler.Clear();
                 NpgsqlCommand command;
@@ -47,11 +50,11 @@ namespace Ubigrade.Library.Processors
                     new NpgsqlCommand
                     ($"select skennzahl, checkpersonnumber, nname, vname, gender, email, sstufe from schueler join person on skennzahl = checkpersonnumber order by skennzahl;", connection);
 
-                var dr = command.ExecuteReader();
+                var dr = await command.ExecuteReaderAsync();
 
                 while (dr.Read())
                 {
-                    ListeSchueler.Add(
+                    list.Add(
                         new SchuelerDLModel(
                             int.Parse(dr[0].ToString()),
                             int.Parse(dr[1].ToString()),
@@ -66,7 +69,7 @@ namespace Ubigrade.Library.Processors
 
                 connection.Close();
             }
-            return ListeSchueler;
+            return list;
         }
 
         public static void SaveSchueler(int id, SchuelerDLModel changedschueler)

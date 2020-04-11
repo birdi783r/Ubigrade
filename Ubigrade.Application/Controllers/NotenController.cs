@@ -13,11 +13,11 @@ namespace Ubigrade.Application.Controllers
     public class NotenController : Controller
     {
         // GET: Noten
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             try
             {
-                var data = NotenProcessor.LoadNoten();
+                var data = await NotenProcessor.LoadNotenAsync("");
 
                 List<NotenModel> ViewListeNoten = new List<NotenModel>();
 

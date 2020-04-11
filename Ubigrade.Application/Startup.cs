@@ -66,7 +66,6 @@ namespace Ubigrade.Application
                    options.AccessType = "offline";
                    options.SaveTokens = true;
                });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

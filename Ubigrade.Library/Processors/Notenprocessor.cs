@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
+using System.Threading.Tasks;
 using Ubigrade.Library.Models;
 
 namespace Ubigrade.Library.Processors
 {
     public class NotenProcessor
     {
-        public static List<NotenDLModel> ListeNoten = new List<NotenDLModel>();
-
-        public static void CreateNote(int nid, int bez, int min)
+        public static bool CreateNote(int nid, int bez, int min)
         {
             try
             {
@@ -23,10 +22,13 @@ namespace Ubigrade.Library.Processors
                     command =
                         new NpgsqlCommand($"insert into notenschema (nid, bez, mindestanforderung) VALUES ({nid},{bez},{min});", connection);
 
-                    command.ExecuteNonQuery();
-
+                    int i = command.ExecuteNonQuery();
                     connection.Close();
+                    if (i == 1)
+                        return true;
+                    return false;
                 }
+
             }
             catch (Exception ex)
             {
@@ -34,24 +36,26 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static List<NotenDLModel> LoadNoten()
+        public static async Task<List<NotenDLModel>> LoadNotenAsync(string con)
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+                //using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString())) 
+                List<NotenDLModel> list = new List<NotenDLModel>();
+
+                using (NpgsqlConnection connection = new NpgsqlConnection(con))
                 {
-                    ListeNoten.Clear();
                     NpgsqlCommand command;
 
                     connection.Open();
                     command =
                         new NpgsqlCommand($"select * from notenschema order by nid", connection);
 
-                    var dr = command.ExecuteReader();
+                    var dr = await command.ExecuteReaderAsync();
 
                     while (dr.Read())
                     {
-                        ListeNoten.Add(
+                        list.Add(
                             new NotenDLModel(
                                 int.Parse(dr[0].ToString()),
                                 int.Parse(dr[1].ToString()),
@@ -62,7 +66,9 @@ namespace Ubigrade.Library.Processors
 
                     connection.Close();
                 }
-                return ListeNoten;
+                if (list.Count > 0)
+                    return list;
+                return list;
             }
             catch (Exception ex)
             {
@@ -70,7 +76,7 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static void SaveNote(int id, NotenDLModel changednote)
+        public static bool SaveNote(int id, NotenDLModel changednote)
         {
             try
             {
@@ -83,9 +89,12 @@ namespace Ubigrade.Library.Processors
                     command =
                     new NpgsqlCommand
                     ($"update notenschema set bez = {changednote.Bezeichnung}, mindestanforderung = {changednote.Mindestanforderung} where nid = {id};", connection);
-                    command.ExecuteNonQuery();
+                    int i = command.ExecuteNonQuery();
 
                     connection.Close();
+                    if (i == 1)
+                        return true;
+                    return false;
                 }
             }
             catch (Exception ex)
