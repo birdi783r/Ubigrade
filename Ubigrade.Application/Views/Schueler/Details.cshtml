@@ -1,0 +1,75 @@
+﻿@model Ubigrade.Application.Models.SchuelerModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SchuelerModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Checkpersonnumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Checkpersonnumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Geschlecht)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Geschlecht)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailAdresse)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmailAdresse)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Schuljahr)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Schuljahr)
+        </dd>
+    </dl>
+
+    <h2>Fächer</h2>
+    <table style="border:solid; border-collapse:collapse; width:100%">
+        <tbody>
+            @foreach (var item in Model.Faecher)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SkennZahl)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fachbezeichnung)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+             }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

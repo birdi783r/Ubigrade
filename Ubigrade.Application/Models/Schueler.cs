@@ -33,5 +33,6 @@ namespace Ubigrade.Application.Models
         [Display(Name = "Schuljahr:")]
         [Required(ErrorMessage = "Schuljahr muss eingegeben werden")]
         public int Schuljahr { get; set; }
+        public List<FaecherModel> Faecher { get; set; }
     }
 }

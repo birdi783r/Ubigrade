@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,7 +15,7 @@ namespace Ubigrade.Library.Processors
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+                using (NpgsqlConnection connection = new NpgsqlConnection())
                 {
                     NpgsqlCommand command;
 

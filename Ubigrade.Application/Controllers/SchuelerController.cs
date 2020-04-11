@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
@@ -12,12 +13,14 @@ namespace Ubigrade.Application.Controllers
 {
     public class SchuelerController : Controller
     {
+        private readonly IConfiguration _config;
+
         // GET: Schueler
         public async Task<ActionResult> Index()
         {
             try
             {
-                var data = await SchuelerProcessor.LoadSchuelerAsync("");
+                var data = await SchuelerProcessor.LoadSchuelerAsync();
 
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
@@ -44,9 +47,40 @@ namespace Ubigrade.Application.Controllers
         }
 
         // GET: Schueler/Details/5
+        [HttpGet]
         public ActionResult Details(int id)
         {
-            return View();
+            try
+            {
+
+                SchuelerDLModel resultschueler = SchuelerProcessor.GetByIdSchueler(id);
+                var datafaecher = SchuelerProcessor.LoadSchuelerFaecher(resultschueler.Checkpersonnumber);
+
+                List<FaecherModel> ViewSchuelerFaecher = new List<FaecherModel>();
+                foreach (var item in datafaecher)
+                {
+                    ViewSchuelerFaecher.Add(
+                        new FaecherModel() { SkennZahl = item.Skennzahl, Fachbezeichnung = item.Fachbezeichnung });
+                }
+
+                SchuelerModel schueler =
+                    new SchuelerModel
+                    {
+                        Checkpersonnumber = resultschueler.Checkpersonnumber,
+                        NName = resultschueler.NName,
+                        VName = resultschueler.VName,
+                        Geschlecht = resultschueler.Geschlecht,
+                        EmailAdresse = resultschueler.EmailAdresse,
+                        Schuljahr = resultschueler.Schuljahr,
+                        Faecher = ViewSchuelerFaecher
+                    };
+
+                return View(schueler);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         // GET: Schueler/Create

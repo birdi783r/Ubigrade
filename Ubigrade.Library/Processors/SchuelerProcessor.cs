@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,8 +11,6 @@ namespace Ubigrade.Library.Processors
 {
     public static class SchuelerProcessor
     {
-        public static List<SchuelerDLModel> ListeSchueler = new List<SchuelerDLModel>();
-
         public static void CreateSchueler(int checknp, string nname, string vname, string geschlecht, string email, int sjahr)
         {
             try
@@ -27,6 +26,13 @@ namespace Ubigrade.Library.Processors
                             ($"call insertschueler('{vname}', '{nname}', '{geschlecht.ToUpper()}', '{email}', {checknp}, {sjahr});", connection);
                     command.ExecuteNonQuery();
 
+
+                    //Fehler
+                    command =
+                        new NpgsqlCommand
+                        ($"insert into schueler2faecher (bez, skennzahl) VALUES ('M',{checknp},('E',{checknp}),('NWT1',{checknp}),('WIRE',{checknp}),('ITP2',{checknp});", connection);
+                    command.ExecuteNonQuery();
+
                     connection.Close();
                 }
             }
@@ -36,11 +42,11 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public async static Task<List<SchuelerDLModel>> LoadSchuelerAsync(string sql)
+        public async static Task<List<SchuelerDLModel>> LoadSchuelerAsync(/*string sql*/ )
         {
-            List<SchuelerDLModel> list = new List<SchuelerDLModel>();
+            List<SchuelerDLModel> ListeSchueler = new List<SchuelerDLModel>();
 
-            using (NpgsqlConnection connection = new NpgsqlConnection(sql))
+            using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
             {
                 ListeSchueler.Clear();
                 NpgsqlCommand command;
@@ -54,7 +60,7 @@ namespace Ubigrade.Library.Processors
 
                 while (dr.Read())
                 {
-                    list.Add(
+                    ListeSchueler.Add(
                         new SchuelerDLModel(
                             int.Parse(dr[0].ToString()),
                             int.Parse(dr[1].ToString()),
@@ -69,7 +75,7 @@ namespace Ubigrade.Library.Processors
 
                 connection.Close();
             }
-            return list;
+            return ListeSchueler;
         }
 
         public static void SaveSchueler(int id, SchuelerDLModel changedschueler)
@@ -148,6 +154,29 @@ namespace Ubigrade.Library.Processors
 
                 connection.Close();
             }
+        }
+
+        public static List<FaecherDLModel> LoadSchuelerFaecher(int id)
+        {
+            List<FaecherDLModel> SchuelerFaecher = new List<FaecherDLModel>();
+            using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+            {
+                SchuelerFaecher.Clear();
+                NpgsqlCommand command;
+
+                connection.Open();
+                command =
+                new NpgsqlCommand($"select skennzahl, bez from schueler2faecher where skennzahl = {id} order by 2;", connection);
+                var dr = command.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    SchuelerFaecher.Add(new FaecherDLModel { Skennzahl = int.Parse(dr[0].ToString()), Fachbezeichnung = dr[1].ToString() });
+                }
+
+                connection.Close();
+            }
+            return SchuelerFaecher;
         }
     }
 }

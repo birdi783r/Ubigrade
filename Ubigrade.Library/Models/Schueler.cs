@@ -13,6 +13,8 @@ namespace Ubigrade.Library.Models
         public string Geschlecht { get; set; }
         public string EmailAdresse { get; set; }
         public int Schuljahr { get; set; }
+        public List<FaecherDLModel> Faecher { get; set; }
+
 
         public SchuelerDLModel()
         { }
@@ -26,6 +28,17 @@ namespace Ubigrade.Library.Models
             Geschlecht = g;
             EmailAdresse = e;
             Schuljahr = sj;
+        }
+        public SchuelerDLModel(int skennzahl, int cprnr, string nn, string vn, string g, string e, int sj, List<FaecherDLModel> faech)
+        {
+            Schuelerkennzahl = skennzahl;
+            Checkpersonnumber = cprnr;
+            NName = nn;
+            VName = vn;
+            Geschlecht = g;
+            EmailAdresse = e;
+            Schuljahr = sj;
+            Faecher = faech;
         }
     }
 }

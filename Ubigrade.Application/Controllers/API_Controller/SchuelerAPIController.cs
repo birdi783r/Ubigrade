@@ -23,7 +23,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
             try
             {
                 //var x = conString;
-                var data = await SchuelerProcessor.LoadSchuelerAsync(conString);
+                var data = await SchuelerProcessor.LoadSchuelerAsync();
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
                 foreach (var item in data)
