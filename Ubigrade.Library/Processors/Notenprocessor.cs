@@ -11,25 +11,27 @@ namespace Ubigrade.Library.Processors
 {
     public class NotenProcessor
     {
-        public static bool CreateNote(int nid, int bez, int min)
+        public async static Task<bool> CreateNoteAsync(int nid, int bez, int min,string sql)
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection())
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
                 {
-                    NpgsqlCommand command;
+                    {
+                        NpgsqlCommand command;
 
-                    connection.Open();
-                    command =
-                        new NpgsqlCommand($"insert into notenschema (nid, bez, mindestanforderung) VALUES ({nid},{bez},{min});", connection);
+                        connection.Open();
+                        command =
+                            new NpgsqlCommand($"insert into notenschema (nid, bez, mindestanforderung) VALUES ({nid},{bez},{min});", connection);
 
-                    int i = command.ExecuteNonQuery();
-                    connection.Close();
-                    if (i == 1)
-                        return true;
-                    return false;
+                        int i = await command.ExecuteNonQueryAsync();
+                        connection.Close();
+                        if (i == 1)
+                            return true;
+                        return false;
+                    }
+
                 }
-
             }
             catch (Exception ex)
             {
@@ -77,11 +79,11 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static bool SaveNote(int id, NotenDLModel changednote)
+        public static async Task<bool> SaveNoteAsync(int id, NotenDLModel changednote,string sql)
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
                 {
                     NpgsqlCommand command;
 
@@ -90,7 +92,7 @@ namespace Ubigrade.Library.Processors
                     command =
                     new NpgsqlCommand
                     ($"update notenschema set bez = {changednote.Bezeichnung}, mindestanforderung = {changednote.Mindestanforderung} where nid = {id};", connection);
-                    int i = command.ExecuteNonQuery();
+                    int i = await command.ExecuteNonQueryAsync();
 
                     connection.Close();
                     if (i == 1)
@@ -104,20 +106,19 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static NotenDLModel GetByIdNote(int id)
+        public static async Task<NotenDLModel> GetByIdNoteAsync(int id,string sql)
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
                 {
                     NpgsqlCommand command;
-
                     //Edit Schueler props [notenschema]
                     connection.Open();
                     command =
                     new NpgsqlCommand
                     ($"select * from notenschema where nid = {id};", connection);
-                    var dr = command.ExecuteReader();
+                    var dr = await command.ExecuteReaderAsync();
                     NotenDLModel editnote = null;
 
                     while (dr.Read())
@@ -140,11 +141,11 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static void DeleteNote(int id)
+        public static async Task<bool> DeleteNoteAsync(int id, string sql)
         {
             try
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(SqlDataAccess.GetConnectionString()))
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
                 {
                     NpgsqlCommand command;
 
@@ -152,10 +153,13 @@ namespace Ubigrade.Library.Processors
                     connection.Open();
                     command =
                         new NpgsqlCommand($"delete from notenschema where nid = {id};", connection);
-                    command.ExecuteNonQuery();
+                    int i = await command.ExecuteNonQueryAsync();
 
                     connection.Close();
+                    if (i == 1)
+                        return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {

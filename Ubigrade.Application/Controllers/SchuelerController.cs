@@ -14,13 +14,18 @@ namespace Ubigrade.Application.Controllers
     public class SchuelerController : Controller
     {
         private readonly IConfiguration _config;
-
+        private readonly string ConnectionString;
+        public SchuelerController(IConfiguration configuration)
+        {
+            _config = configuration;
+            ConnectionString = _config.GetConnectionString("UbiServer");
+        }
         // GET: Schueler
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                var data = await SchuelerProcessor.LoadSchuelerAsync();
+                var data = await SchuelerProcessor.LoadSchuelerAsync(ConnectionString);
 
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
@@ -48,13 +53,13 @@ namespace Ubigrade.Application.Controllers
 
         // GET: Schueler/Details/5
         [HttpGet]
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             try
             {
 
-                SchuelerDLModel resultschueler = SchuelerProcessor.GetByIdSchueler(id);
-                var datafaecher = SchuelerProcessor.LoadSchuelerFaecher(resultschueler.Checkpersonnumber);
+                SchuelerDLModel resultschueler = await SchuelerProcessor.GetByIdSchuelerAsync(ConnectionString,id);
+                var datafaecher = await SchuelerProcessor.LoadSchuelerFaecherAsync(ConnectionString,resultschueler.Checkpersonnumber);
 
                 List<FaecherModel> ViewSchuelerFaecher = new List<FaecherModel>();
                 foreach (var item in datafaecher)
@@ -93,12 +98,12 @@ namespace Ubigrade.Application.Controllers
         // POST: Schueler/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SchuelerModel neuerschueler)
+        public async Task<IActionResult> Create(SchuelerModel neuerschueler)
         {
             try
             {
                 if (ModelState.IsValid)
-                    SchuelerProcessor.CreateSchueler(neuerschueler.Checkpersonnumber, neuerschueler.NName, neuerschueler.VName, neuerschueler.Geschlecht, neuerschueler.EmailAdresse, neuerschueler.Schuljahr);
+                    await SchuelerProcessor.CreateSchuelerAsync(neuerschueler.Checkpersonnumber, neuerschueler.NName, neuerschueler.VName, neuerschueler.Geschlecht, neuerschueler.EmailAdresse, neuerschueler.Schuljahr, ConnectionString);
 
                 return RedirectToAction("Index");
             }
@@ -110,11 +115,11 @@ namespace Ubigrade.Application.Controllers
 
         // GET: Schueler/Edit/5
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                SchuelerDLModel resultschueler = SchuelerProcessor.GetByIdSchueler(id);
+                SchuelerDLModel resultschueler = await SchuelerProcessor.GetByIdSchuelerAsync(ConnectionString,id);
 
                 SchuelerModel schueler =
                     new SchuelerModel
@@ -138,11 +143,11 @@ namespace Ubigrade.Application.Controllers
         // POST: Schueler/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, SchuelerDLModel changedschueler)
+        public async Task<IActionResult> Edit(int id, SchuelerDLModel changedschueler)
         {
             try
             {
-                SchuelerProcessor.SaveSchueler(id, changedschueler);
+                var f = await SchuelerProcessor.SaveSchuelerAsync(ConnectionString,id, changedschueler);
 
                 return RedirectToAction("Index");
             }
@@ -154,11 +159,11 @@ namespace Ubigrade.Application.Controllers
 
         // GET: Schueler/Delete/5
         [HttpGet]
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                SchuelerDLModel resultschueler = SchuelerProcessor.GetByIdSchueler(id);
+                SchuelerDLModel resultschueler = await SchuelerProcessor.GetByIdSchuelerAsync(ConnectionString, id);
 
                 SchuelerModel schueler =
                     new SchuelerModel
@@ -182,11 +187,11 @@ namespace Ubigrade.Application.Controllers
         // POST: Schueler/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete_Post(int id)
+        public async Task<IActionResult> Delete_Post(int id)
         {
             try
             {
-                SchuelerProcessor.DeleteSchueler(id);
+                await SchuelerProcessor.DeleteSchuelerAsync(ConnectionString,id);
 
                 return RedirectToAction("Index");
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
@@ -12,20 +13,23 @@ namespace Ubigrade.Application.Controllers
 {
     public class NotenController : Controller
     {
+        private readonly IConfiguration _conf;
+        private readonly string ConnectionString;
+        public NotenController(IConfiguration configuration)
+        {
+            _conf = configuration;
+        }
         // GET: Noten
         public async Task<ActionResult> Index()
         {
             try
             {
                 var data = await NotenProcessor.LoadNotenAsync("");
-
                 List<NotenModel> ViewListeNoten = new List<NotenModel>();
-
                 foreach (var item in data)
                 {
-                    ViewListeNoten.Add(
-                        new NotenModel
-                        {
+                    ViewListeNoten.Add
+                        (new NotenModel{
                             NId = item.NId,
                             Bezeichnung = item.Bezeichnung,
                             Mindestanforderung = item.Mindestanforderung
@@ -55,13 +59,13 @@ namespace Ubigrade.Application.Controllers
         // POST: Noten/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(NotenModel neuenote)
+        public async Task<IActionResult> Create(NotenModel neuenote)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    NotenProcessor.CreateNote(neuenote.NId, neuenote.Bezeichnung, neuenote.Mindestanforderung);
+                    await NotenProcessor.CreateNoteAsync(neuenote.NId, neuenote.Bezeichnung, neuenote.Mindestanforderung, ConnectionString);
                 }
 
                 return RedirectToAction("Index");
@@ -74,11 +78,11 @@ namespace Ubigrade.Application.Controllers
 
         // GET: Noten/Edit/5
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                NotenDLModel resultnote = NotenProcessor.GetByIdNote(id);
+                NotenDLModel resultnote = await NotenProcessor.GetByIdNoteAsync(id, ConnectionString);
 
                 NotenModel note =
                     new NotenModel
@@ -99,11 +103,11 @@ namespace Ubigrade.Application.Controllers
         // POST: Noten/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, NotenDLModel changednote)
+        public async Task<IActionResult> Edit(int id, NotenDLModel changednote)
         {
             try
             {
-                NotenProcessor.SaveNote(id, changednote);
+                await NotenProcessor.SaveNoteAsync(id, changednote, ConnectionString);
 
                 return RedirectToAction("Index");
             }
@@ -114,11 +118,11 @@ namespace Ubigrade.Application.Controllers
         }
 
         // GET: Noten/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                NotenDLModel resultnote = NotenProcessor.GetByIdNote(id);
+                NotenDLModel resultnote = await NotenProcessor.GetByIdNoteAsync(id, ConnectionString);
 
                 NotenModel note =
                     new NotenModel
@@ -139,11 +143,11 @@ namespace Ubigrade.Application.Controllers
         // POST: Noten/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete_Post(int id)
+        public async Task<IActionResult> Delete_Post(int id)
         {
             try
             {
-                NotenProcessor.DeleteNote(id);
+                await NotenProcessor.DeleteNoteAsync(id,ConnectionString);
 
                 return RedirectToAction("Index");
             }

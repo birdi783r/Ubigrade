@@ -4,37 +4,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
 
 namespace Ubigrade.Application.Controllers.API_Controller
 {
-    [Route("api/Noten")]
+    [Route("api/noten")]
     [ApiController]
     public class NotenAPIController : ControllerBase
     {
-        // GET: api/NotenAPI
+        // GET: api/NotenAPI    
+        private readonly IConfiguration _config;
+        private readonly string ConnectionString;
+        public NotenAPIController(IConfiguration configuration)
+        {
+            _config = configuration;
+            ConnectionString = _config.GetConnectionString("UbiServer");
+        }
         [HttpGet]
-        public IEnumerable<NotenModel> GetNoten()
+        public async Task<List<NotenModel>> GetNoten()
         {
             try
             {
-                var data = NotenProcessor.LoadNotenAsync("");
+                var data = await NotenProcessor.LoadNotenAsync(ConnectionString);
 
                 List<NotenModel> ViewListeNoten = new List<NotenModel>();
 
-                //foreach (var item in data)
-                //{
-                //    ViewListeNoten.Add(
-                //        new NotenModel
-                //        {
-                //            NId = item.NId,
-                //            Bezeichnung = item.Bezeichnung,
-                //            Mindestanforderung = item.Mindestanforderung
-                //        }
-                //        );
-                //}
+                foreach (var item in data)
+                {
+                    ViewListeNoten.Add(
+                        new NotenModel
+                        {
+                            NId = item.NId,
+                            Bezeichnung = item.Bezeichnung,
+                            Mindestanforderung = item.Mindestanforderung
+                        }
+                        );
+                }
                 return ViewListeNoten;
             }
             catch (Exception ex)
@@ -45,11 +53,11 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // GET: api/Noten/5
         [HttpGet("{id}"/*, Name = "Get"*/)]
-        public NotenModel GetNote(int id)
+        public async Task<NotenModel> GetNoteAsync(int id)
         {
             try
             {
-                NotenDLModel resultnote = NotenProcessor.GetByIdNote(id);
+                NotenDLModel resultnote = await NotenProcessor.GetByIdNoteAsync(id, ConnectionString);
 
                 NotenModel note =
                     new NotenModel
@@ -69,15 +77,16 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // POST: api/Noten
         [HttpPost]
-        public void PostNote(NotenModel note)
+        public async Task<bool> PostNote(NotenModel note)
         {
             try
             {
-                NotenProcessor.CreateNote(
+                var b = await NotenProcessor.CreateNoteAsync(
                     note.NId,
                     note.Bezeichnung,
-                    note.Mindestanforderung
-                    );
+                    note.Mindestanforderung,
+                    ConnectionString);
+                return b;
             }
             catch (Exception ex)
             {
@@ -87,11 +96,12 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // PUT: api/Noten/5
         [HttpPut("{id}")]
-        public void PutNote(int id, NotenDLModel note)
+        public async Task<bool> PutNoteAsync(int id, NotenDLModel note)
         {
             try
             {
-                NotenProcessor.SaveNote(id, note);
+                var d = await NotenProcessor.SaveNoteAsync(id, note,ConnectionString);
+                return d;
             }
             catch (Exception ex)
             {
@@ -101,11 +111,11 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // DELETE: api/Noten/5
         [HttpDelete("{id}")]
-        public void DeleteNote(int id)
+        public async Task DeleteNote(int id)
         {
             try
             {
-                NotenProcessor.DeleteNote(id);
+                NotenProcessor.DeleteNoteAsync(id, ConnectionString);
             }
             catch (Exception ex)
             {

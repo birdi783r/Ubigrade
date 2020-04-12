@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
@@ -13,17 +14,23 @@ namespace Ubigrade.Application.Controllers.API_Controller
 {
     [Route("api/schueler")]
     [ApiController]
-    public class SchuelersController : ControllerBase 
+    public class SchuelerAPIController : ControllerBase 
     {
-        public string conString = ConfigurationManager.ConnectionStrings["UbiServer"].ConnectionString;
-
+        //public string conString = ConfigurationManager.ConnectionStrings["UbiServer"].ConnectionString;
+        private readonly IConfiguration _config;
+        private readonly string ConnectionString;
+        public SchuelerAPIController(IConfiguration configuration)
+        {
+            _config = configuration;
+            ConnectionString = _config.GetConnectionString("UbiServer");
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SchuelerModel>>> GetSchuelers()
         {
             try
             {
                 //var x = conString;
-                var data = await SchuelerProcessor.LoadSchuelerAsync();
+                var data = await SchuelerProcessor.LoadSchuelerAsync(ConnectionString);
                 List<SchuelerModel> ViewListeSchueler = new List<SchuelerModel>();
 
                 foreach (var item in data)
@@ -39,7 +46,6 @@ namespace Ubigrade.Application.Controllers.API_Controller
                             Schuljahr = item.Schuljahr
                         });
                 }
-
                 return ViewListeSchueler;
             }
             catch (Exception ex)
@@ -56,7 +62,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
             {
                 await Task.Delay(10);
 
-                SchuelerDLModel resultschueler = SchuelerProcessor.GetByIdSchueler(id);
+                SchuelerDLModel resultschueler = await SchuelerProcessor.GetByIdSchuelerAsync(ConnectionString,id);
 
                 SchuelerModel schueler =
                     new SchuelerModel
@@ -86,7 +92,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
             {
                 await Task.Delay(10);
 
-                SchuelerProcessor.SaveSchueler(id, schueler);
+                await SchuelerProcessor.SaveSchuelerAsync(ConnectionString,id, schueler);
 
                 return "schueler_updated";
             }
@@ -106,13 +112,14 @@ namespace Ubigrade.Application.Controllers.API_Controller
             {
                 await Task.Delay(10);
 
-                SchuelerProcessor.CreateSchueler(
+                await SchuelerProcessor.CreateSchuelerAsync(
                 schueler.Checkpersonnumber,
                 schueler.NName,
                 schueler.VName,
                 schueler.Geschlecht,
                 schueler.EmailAdresse,
-                schueler.Schuljahr);
+                schueler.Schuljahr,
+                ConnectionString);
 
                 return "schueler_created";
             }
@@ -130,7 +137,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
             {
                 await Task.Delay(10);
 
-                SchuelerProcessor.DeleteSchueler(id);
+                await SchuelerProcessor.DeleteSchuelerAsync(ConnectionString,id);
 
                 return "schueler_deleted";
             }
