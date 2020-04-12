@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
@@ -87,6 +88,18 @@ namespace Ubigrade.Application.Controllers
             string userid2 = "ubigrade19-20@htlwienwest.at";
             UserCredential credential = GoogleProviderHelper.CreateUserCredential(User);
             var x = await GetClassroomUserProfile(credential, userid2);
+            var y = JsonConvert.SerializeObject(x);
+            return Content(y);
+        }
+        [Route("getPeopleInfo")]
+        public async Task<IActionResult> GetPeople()
+        {
+            var userFromManager = await _userManager.GetUserAsync(User);
+            //von nikola zdravkovic
+            string userid = "115978104850547008611";
+            string userid2 = "ubigrade19-20@htlwienwest.at";
+            UserCredential credential = GoogleProviderHelper.CreateUserCredential(User);
+            var x = await GetPeopleInfo(credential, User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier).Value);
             var y = JsonConvert.SerializeObject(x);
             return Content(y);
         }

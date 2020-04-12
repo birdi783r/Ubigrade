@@ -166,9 +166,10 @@ namespace Ubigrade.Library.Google
                 ApiKey = "AIzaSyBtsaZHK0PswRKIcErSX7eH7ojT_rHeKpE",
                 ApplicationName = "UbiGrade"
             });
-            PeopleResource.GetRequest request = service.People.Get("people/103236532222954729071");
+
+            PeopleResource.GetRequest request = service.People.Get("people/me");
             request.BearerToken = credential.Token.AccessToken;
-            request.RequestMaskIncludeField = "person.organizations , people.names";
+            request.RequestMaskIncludeField = "people.names";
 
             // htl orgunit id = 1056718226129
 

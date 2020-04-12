@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using Google.Apis.Admin.Directory.directory_v1;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace Ubigrade.Application
 {
@@ -49,7 +50,7 @@ namespace Ubigrade.Application
         {
             services.AddDbContext<UbigradeDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("UbigradeServer")));
+                    Configuration.GetConnectionString("UbigradeServer2")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<UbigradeDbContext>().AddSignInManager<GoogleAwareSignInManager>();
             services.AddControllersWithViews();
@@ -65,6 +66,15 @@ namespace Ubigrade.Application
                    }
                    options.AccessType = "offline";
                    options.SaveTokens = true;
+                   //options.Events = new OAuthEvents
+                   //{
+                   //    OnCreatingTicket = context =>
+                   //    {
+                   //        var language = context.User.tryget
+                   //        context.Identity.AddClaim(new Claim("urn:language", language));
+                   //        return Task.FromResult(0);
+                   //    }
+                   //};
                });
         }
 

@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Ubigrade.Library.Processors;
+using Ubigrade.Library.Google;
+using Microsoft.Extensions.Configuration;
 
 namespace Ubigrade.Application.Areas.Identity.Pages.Account
 {
@@ -24,17 +27,21 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
-
+        private readonly IConfiguration _config;
+        private readonly string ConnectionString;
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
-            ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+        SignInManager<IdentityUser> signInManager,
+        UserManager<IdentityUser> userManager,
+        ILogger<ExternalLoginModel> logger,
+        IEmailSender emailSender,
+        IConfiguration configuration)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _config = configuration;
             _emailSender = emailSender;
+            ConnectionString = _config.GetConnectionString("UbiServer");
         }
 
         [BindProperty]
@@ -75,7 +82,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -85,7 +92,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             //problem hier bei nip io adresse. ^
             if (result.Succeeded)
             {
@@ -184,10 +191,40 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                         //    Picture
                         if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
                         {
-                            await _userManager.AddClaimAsync(user,
+                            string firstname = "";
+                            string lastname = "";
+                            string email = "";
+                            string gender = "";
+                            string userid = "";
+                            var x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.GivenName));
-                            await _userManager.AddClaimAsync(user,
+                            x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.Email));
+                            x = await _userManager.AddClaimAsync(user,
+                                info.Principal.FindFirst(ClaimTypes.Surname));
+                            x = await _userManager.AddClaimAsync(user,
+                                info.Principal.FindFirst(ClaimTypes.NameIdentifier));
+                            var claims = await _userManager.GetClaimsAsync(user);
+                            foreach (var c in claims)
+                            {
+                                if (c.Type == ClaimTypes.NameIdentifier)
+                                    userid = c.Value;
+                                if (c.Type == ClaimTypes.GivenName)
+                                    firstname = c.Value;
+                                if (c.Type == ClaimTypes.Surname)
+                                    lastname = c.Value;
+                                if (c.Type == ClaimTypes.Email)
+                                    email = c.Value;
+
+                            }
+                            //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
+                            //var peopleinfo = await GetGoogleData.GetPeopleInfo(credential,userid);
+                            var schueler = await SchuelerProcessor.ExistsSchuelerByIdAsync(userid, ConnectionString);
+                            if (!schueler)
+                            {
+                                var breakpoint = 0;
+                                await SchuelerProcessor.CreateSchuelerAsync(userid, lastname, firstname, "M", email, 12, ConnectionString);
+                            }
                         }
 
                         // Include the access token in the properties

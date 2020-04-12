@@ -11,7 +11,32 @@ namespace Ubigrade.Library.Processors
 {
     public static class SchuelerProcessor
     {
-        public async static Task<bool> CreateSchuelerAsync(int checknp, string nname, string vname, string geschlecht, string email, int sjahr,string sql)
+        public async static Task<bool> CreateSchuelerAsync(string checknp, string nname, string vname, string geschlecht, string email, int sjahr,string sql)
+        {
+            try
+            {
+                string statement = $"call insertschueler('{vname}', '{nname}', '{geschlecht.ToUpper()}', '{email}', '{checknp}', {sjahr.ToString()});";
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
+                {
+                    NpgsqlCommand command;
+                    connection.Open();
+                    command =
+                            new NpgsqlCommand
+                            (statement, connection);
+                    int i = await command.ExecuteNonQueryAsync();
+
+                    connection.Close();
+                    if (i == 1)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+            public async static Task<bool> CreateSchueler2FaecherAsync(int checknp, string nname, string vname, string geschlecht, string email, int sjahr,string sql)
         {
             try
             {
@@ -21,19 +46,14 @@ namespace Ubigrade.Library.Processors
                     var x = geschlecht.ToUpper();
 
                     connection.Open();
-                    command =
-                            new NpgsqlCommand
-                            ($"call insertschueler('{vname}', '{nname}', '{geschlecht.ToUpper()}', '{email}', {checknp}, {sjahr});", connection);
-                    int i = await command.ExecuteNonQueryAsync();
-
-
                     //Fehler
                     command =
                         new NpgsqlCommand
                         ($"insert into schueler2faecher (bez, skennzahl) VALUES ('M',{checknp},('E',{checknp}),('NWT1',{checknp}),('WIRE',{checknp}),('ITP2',{checknp});", connection);
-                    i += await command.ExecuteNonQueryAsync();
+                    int i = await command.ExecuteNonQueryAsync();
                     connection.Close();
-                    if (i == 2)
+                    // sicher? 
+                    if (i == 1)
                         return true;
                     return false;
                 }
@@ -78,6 +98,34 @@ namespace Ubigrade.Library.Processors
                 connection.Close();
             }
             return ListeSchueler;
+        }
+        public async static Task<bool> ExistsSchuelerByIdAsync(string userid,string sql)
+        {
+            List<SchuelerDLModel> ListeSchueler = new List<SchuelerDLModel>();
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
+                {
+                    ListeSchueler.Clear();
+                    NpgsqlCommand command;
+
+                    connection.Open();
+                    command =
+                        new NpgsqlCommand
+                        ($"select skennzahl, checkpersonnumber, nname, vname, gender, email, sstufe from schueler join person on skennzahl = checkpersonnumber where checkpersonnumber = '{userid}' order by skennzahl;", connection);
+
+                    var i = await command.ExecuteNonQueryAsync();
+                    connection.Close();
+                    if (i == 1)
+                        return true;
+                    return false;
+                }
+            }
+            catch(Exception e)
+            {
+                var msg = e.InnerException.Message;
+                return false;
+            }
         }
 
         public async  static Task<bool> SaveSchuelerAsync(string sql, int id, SchuelerDLModel changedschueler)

@@ -41,11 +41,19 @@ namespace Ubigrade.Library.Google
                 //DirectoryService.Scope.AdminDirectoryOrgunitReadonly,
                 //DirectoryService.Scope.AdminDirectoryUserReadonly,
                 "https://www.googleapis.com/auth/user.organization.read",
-                "https://www.googleapis.com/auth/userinfo.profile",
                 "https://www.googleapis.com/auth/cloud-platform",
 "https://www.googleapis.com/auth/cloud-platform.read-only",
 "https://www.googleapis.com/auth/cloudplatformorganizations",
-"https://www.googleapis.com/auth/cloudplatformorganizations.readonly"
+"https://www.googleapis.com/auth/cloudplatformorganizations.readonly",
+"https://www.googleapis.com/auth/contacts",
+"https://www.googleapis.com/auth/contacts.readonly",
+"https://www.googleapis.com/auth/user.addresses.read",
+"https://www.googleapis.com/auth/user.birthday.read",
+"https://www.googleapis.com/auth/user.emails.read",
+"https://www.googleapis.com/auth/user.organization.read",
+"https://www.googleapis.com/auth/user.phonenumbers.read",
+"https://www.googleapis.com/auth/userinfo.email",
+"https://www.googleapis.com/auth/userinfo.profile"
             };
         //
         public const string UserIdFieldName = ProviderName + "_userid";
