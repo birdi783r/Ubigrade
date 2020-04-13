@@ -87,7 +87,7 @@ namespace Ubigrade.Application.Controllers
             string userid = "115978104850547008611";
             string userid2 = "ubigrade19-20@htlwienwest.at";
             UserCredential credential = GoogleProviderHelper.CreateUserCredential(User);
-            var x = await GetClassroomUserProfile(credential, userid2);
+            var x = await GetClassroomUserProfile(credential);
             var y = JsonConvert.SerializeObject(x);
             return Content(y);
         }

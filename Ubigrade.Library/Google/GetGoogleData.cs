@@ -93,16 +93,14 @@ namespace Ubigrade.Library.Google
             student = response;
             return student;
         }
-        public async static Task<UserProfile> GetClassroomUserProfile(UserCredential credential, string userid_key_mail)
+        public async static Task<UserProfile> GetClassroomUserProfile(UserCredential credential)
         {
             var service = new ClassroomService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
                 ApplicationName = "UbiGrade"
             });
-
             UserProfilesResource.GetRequest request = service.UserProfiles.Get(credential.UserId);
-            // List courses. 
             var result = await request.ExecuteAsync();
 
             return result;

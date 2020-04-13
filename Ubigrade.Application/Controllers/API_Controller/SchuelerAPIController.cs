@@ -113,7 +113,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
                 await Task.Delay(10);
 
                 await SchuelerProcessor.CreateSchuelerAsync(
-                schueler.Checkpersonnumber,
+                schueler.Checkpersonnumber.ToString(),
                 schueler.NName,
                 schueler.VName,
                 schueler.Geschlecht,

@@ -103,8 +103,7 @@ namespace Ubigrade.Application.Controllers
             try
             {
                 if (ModelState.IsValid)
-                    await SchuelerProcessor.CreateSchuelerAsync(neuerschueler.Checkpersonnumber, neuerschueler.NName, neuerschueler.VName, neuerschueler.Geschlecht, neuerschueler.EmailAdresse, neuerschueler.Schuljahr, ConnectionString);
-
+                    await SchuelerProcessor.CreateSchuelerAsync(neuerschueler.Checkpersonnumber.ToString(), neuerschueler.NName, neuerschueler.VName, neuerschueler.Geschlecht, neuerschueler.EmailAdresse, neuerschueler.Schuljahr, ConnectionString);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

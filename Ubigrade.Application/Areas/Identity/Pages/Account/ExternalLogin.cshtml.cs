@@ -196,6 +196,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                             string email = "";
                             string gender = "";
                             string userid = "";
+                            bool IsTeacher = false;
                             var x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.GivenName));
                             x = await _userManager.AddClaimAsync(user,
@@ -204,6 +205,11 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                                 info.Principal.FindFirst(ClaimTypes.Surname));
                             x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.NameIdentifier));
+
+                            //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
+                            //var u = await GetGoogleData.GetClassroomUserProfile(credential);
+                            //if(u.VerifiedTeacher.Value)
+                            //    x = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role,"Teacher"));
                             var claims = await _userManager.GetClaimsAsync(user);
                             foreach (var c in claims)
                             {
@@ -215,9 +221,9 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                                     lastname = c.Value;
                                 if (c.Type == ClaimTypes.Email)
                                     email = c.Value;
-
+                                //if (c.Type == ClaimTypes.Role && c.Value == "Teacher")
+                                //    IsTeacher = true;
                             }
-                            //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
                             //var peopleinfo = await GetGoogleData.GetPeopleInfo(credential,userid);
                             var schueler = await SchuelerProcessor.ExistsSchuelerByIdAsync(userid, ConnectionString);
                             if (!schueler)
@@ -225,7 +231,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                                 var breakpoint = 0;
                                 await SchuelerProcessor.CreateSchuelerAsync(userid, lastname, firstname, "M", email, 12, ConnectionString);
                             }
-                        }
+                        } 
 
                         // Include the access token in the properties
                         var props = new AuthenticationProperties();
@@ -233,6 +239,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                         props.IsPersistent = true;
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        //////
 
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

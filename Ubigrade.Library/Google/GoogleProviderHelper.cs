@@ -79,8 +79,8 @@ namespace Ubigrade.Library.Google
             ClaimsIdentity identity = principal.Identities.Where(i => i.AuthenticationType == ProviderName).Single();
 
             var flow = new GoogleAuthorizationCodeFlow(initializer);
-            var userId = identity.FindFirst(UserIdFieldName).Value;
-
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //var userId = identity.FindFirst(UserIdFieldName).Value
             DateTime issuedAt = DateTime.Parse(identity.FindFirst(TokenIssuedFieldName).Value);
             DateTime expiresAt = DateTime.Parse(identity.FindFirst(TokenExpiresAtFieldName).Value);
             long seconds = (long)(expiresAt - issuedAt).TotalSeconds;

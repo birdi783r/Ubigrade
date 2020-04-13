@@ -11,32 +11,38 @@ namespace Ubigrade.Library.Processors
 {
     public static class SchuelerProcessor
     {
-        public async static Task<bool> CreateSchuelerAsync(string checknp, string nname, string vname, string geschlecht, string email, int sjahr,string sql)
+        public async static Task<bool> CreateSchuelerAsync(string checknp, string nname, string vname, string geschlecht, string email, int sjahr, string sql)
         {
+
             try
             {
+                bool b1 = await ExistsSchuelerByIdAsync(checknp, sql);
+                if (b1 == true)
+                    return false;
                 string statement = $"call insertschueler('{vname}', '{nname}', '{geschlecht.ToUpper()}', '{email}', '{checknp}', {sjahr.ToString()});";
                 using (NpgsqlConnection connection = new NpgsqlConnection(sql))
                 {
-                    NpgsqlCommand command;
                     connection.Open();
-                    command =
-                            new NpgsqlCommand
-                            (statement, connection);
-                    int i = await command.ExecuteNonQueryAsync();
+                    NpgsqlCommand command;
+                    command = new NpgsqlCommand(statement, connection);
+                    NpgsqlDataAdapter adapter = new NpgsqlDataAdapter();
+
+                    await command.ExecuteNonQueryAsync();
 
                     connection.Close();
-                    if (i == 1)
-                        return true;
-                    return false;
+
                 }
+                bool b2 = await ExistsSchuelerByIdAsync(checknp, sql);
+                if (b1 == false && b2 == true)
+                    return true;
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return false;
             }
         }
-            public async static Task<bool> CreateSchueler2FaecherAsync(int checknp, string nname, string vname, string geschlecht, string email, int sjahr,string sql)
+        public async static Task<bool> CreateSchueler2FaecherAsync(int checknp, string nname, string vname, string geschlecht, string email, int sjahr, string sql)
         {
             try
             {
@@ -99,36 +105,37 @@ namespace Ubigrade.Library.Processors
             }
             return ListeSchueler;
         }
-        public async static Task<bool> ExistsSchuelerByIdAsync(string userid,string sql)
+        public async static Task<bool> ExistsSchuelerByIdAsync(string userid, string sql)
         {
-            List<SchuelerDLModel> ListeSchueler = new List<SchuelerDLModel>();
-            try
+            using (NpgsqlConnection connection = new NpgsqlConnection(sql))
             {
-                using (NpgsqlConnection connection = new NpgsqlConnection(sql))
+                NpgsqlCommand command;
+
+                connection.Open();
+                command =
+                    new NpgsqlCommand
+                    ($"select skennzahl, checkpersonnumber, nname, vname, gender, email, sstufe from schueler join person on skennzahl = checkpersonnumber where checkpersonnumber = '{userid}' order by skennzahl;", connection);
+
+                var dr = await command.ExecuteReaderAsync();
+                var d = dr.Read();
+                if (d)
                 {
-                    ListeSchueler.Clear();
-                    NpgsqlCommand command;
-
-                    connection.Open();
-                    command =
-                        new NpgsqlCommand
-                        ($"select skennzahl, checkpersonnumber, nname, vname, gender, email, sstufe from schueler join person on skennzahl = checkpersonnumber where checkpersonnumber = '{userid}' order by skennzahl;", connection);
-
-                    var i = await command.ExecuteNonQueryAsync();
+                    var id = dr[1].ToString();
                     connection.Close();
-                    if (i == 1)
+                    if (id.Contains(userid))
+                    {
+                        connection.Close();
                         return true;
+                    }
                     return false;
                 }
-            }
-            catch(Exception e)
-            {
-                var msg = e.InnerException.Message;
+                connection.Close();
                 return false;
             }
         }
 
-        public async  static Task<bool> SaveSchuelerAsync(string sql, int id, SchuelerDLModel changedschueler)
+
+        public async static Task<bool> SaveSchuelerAsync(string sql, int id, SchuelerDLModel changedschueler)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(sql))
             {
@@ -154,7 +161,7 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public async static Task<SchuelerDLModel> GetByIdSchuelerAsync(string sql,int id)
+        public async static Task<SchuelerDLModel> GetByIdSchuelerAsync(string sql, int id)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(sql))
             {
@@ -181,7 +188,7 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public static async Task<bool> DeleteSchuelerAsync(string sql,int id)
+        public static async Task<bool> DeleteSchuelerAsync(string sql, int id)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(sql))
             {
@@ -208,7 +215,7 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public async static Task<List<FaecherDLModel>> LoadSchuelerFaecherAsync(string sql,int id)
+        public async static Task<List<FaecherDLModel>> LoadSchuelerFaecherAsync(string sql, int id)
         {
             List<FaecherDLModel> SchuelerFaecher = new List<FaecherDLModel>();
             using (NpgsqlConnection connection = new NpgsqlConnection(sql))
