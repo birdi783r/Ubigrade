@@ -41,7 +41,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
             _logger = logger;
             _config = configuration;
             _emailSender = emailSender;
-            ConnectionString = _config.GetConnectionString("UbiServer");
+            ConnectionString = _config.GetConnectionString("Ubigrade2");
         }
 
         [BindProperty]
@@ -94,8 +94,12 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             //problem hier bei nip io adresse. ^
+            
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            //var existingClaims = await _userManager.GetClaimsAsync(user);
             if (result.Succeeded)
             {
+                #region
                 // Store the access token and resign in so the token is included in
                 // in the cookie
                 ////var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
@@ -141,6 +145,48 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                 // ONLY TO STORE TOKENS IN EXTERNAL DB
                 // Store the authentication tokens in the external database ...
                 // await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                #endregion
+                //string firstname = "";
+                //string lastname = "";
+                //string email = "";
+                //string gender = "";
+                //string userid = "";
+
+                //if (String.IsNullOrWhiteSpace(info.Principal.FindFirst(ClaimTypes.GivenName).Value))
+                //{
+                //    var b = await _userManager.AddClaimAsync(user, info.Principal.FindFirst(ClaimTypes.GivenName));
+                //}
+                //if (String.IsNullOrWhiteSpace(info.Principal.FindFirst(ClaimTypes.Email).Value))
+                //{
+                //    var b = await _userManager.AddClaimAsync(user,
+                //    info.Principal.FindFirst(ClaimTypes.Email));
+                //}
+                //if (String.IsNullOrWhiteSpace(info.Principal.FindFirst(ClaimTypes.Surname).Value))
+                //{
+                //    var b = await _userManager.AddClaimAsync(user,
+                //    info.Principal.FindFirst(ClaimTypes.Surname));
+                //}
+                //if (String.IsNullOrWhiteSpace(info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value))
+                //{
+                //    var b = await _userManager.AddClaimAsync(user,
+                //    info.Principal.FindFirst(ClaimTypes.NameIdentifier));
+                //}
+
+                //var claims = await _userManager.GetClaimsAsync(user);
+                //foreach (var c in claims)
+                //{
+                //    if (c.Type == ClaimTypes.NameIdentifier)
+                //        userid = c.Value;
+                //    if (c.Type == ClaimTypes.GivenName)
+                //        firstname = c.Value;
+                //    if (c.Type == ClaimTypes.Surname)
+                //        lastname = c.Value;
+                //    if (c.Type == ClaimTypes.Email)
+                //        email = c.Value;
+                //}
+                //var schueler = await SchuelerProcessor.ExistsSchuelerByIdAsync(userid, ConnectionString);
+                //if (!schueler)
+                //    await SchuelerProcessor.CreateSchuelerAsync(userid, lastname, firstname, "M", email, 12, ConnectionString);
 
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
@@ -205,6 +251,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                                 info.Principal.FindFirst(ClaimTypes.Surname));
                             x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.NameIdentifier));
+                            
 
                             //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
                             //var u = await GetGoogleData.GetClassroomUserProfile(credential);

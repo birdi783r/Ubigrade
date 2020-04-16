@@ -90,13 +90,13 @@ namespace Ubigrade.Library.Processors
                 {
                     ListeSchueler.Add(
                         new SchuelerDLModel(
-                            int.Parse(dr[0].ToString()),
-                            int.Parse(dr[1].ToString()),
-                            dr[2].ToString(),
-                            dr[3].ToString(),
-                            dr[4].ToString(),
-                            dr[5].ToString(),
-                            int.Parse(dr[6].ToString())
+                            int.Parse(dr[0].ToString().Trim()),
+                            int.Parse(dr[1].ToString().Trim()),
+                            dr[2].ToString().Trim(),
+                            dr[3].ToString().Trim(),
+                            dr[4].ToString().Trim(),
+                            dr[5].ToString().Trim(),
+                            int.Parse(dr[6].ToString().Trim())
                             )
                         );
                 }

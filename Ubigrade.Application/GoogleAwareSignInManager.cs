@@ -50,6 +50,7 @@ namespace Ubigrade.Application
                     }
                     claimsToAdd.Add(new Claim("Google_userid", info.ProviderKey));
                     claimsToAdd.Add(new Claim("Google_issued_utc", info.AuthenticationProperties.IssuedUtc.ToString()));
+
                     foreach (var token in info.AuthenticationTokens)
                     {
                         claimsToAdd.Add(new Claim("Google_" + token.Name, token.Value));

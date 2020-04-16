@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Ubigrade.Application.Filters;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
 
 namespace Ubigrade.Application.Controllers.API_Controller
 {
+    [ApiKeyAuth]
     [Route("api/noten")]
     [ApiController]
     public class NotenAPIController : ControllerBase
@@ -21,7 +23,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
         public NotenAPIController(IConfiguration configuration)
         {
             _config = configuration;
-            ConnectionString = _config.GetConnectionString("UbiServer");
+            ConnectionString = _config.GetConnectionString("Ubigrade2");
         }
         [HttpGet]
         public async Task<List<NotenModel>> GetNoten()

@@ -9,7 +9,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
 {
     public abstract class BaseAPIController : ControllerBase
     {
-        public string conString = ConfigurationManager.ConnectionStrings["UbiServer"].ConnectionString;
+        public string conString = ConfigurationManager.ConnectionStrings["Ubigrade2"].ConnectionString;
         AppSettingsReader reader = new AppSettingsReader();
        
         public BaseAPIController()

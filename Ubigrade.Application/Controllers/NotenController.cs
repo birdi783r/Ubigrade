@@ -18,6 +18,7 @@ namespace Ubigrade.Application.Controllers
         public NotenController(IConfiguration configuration)
         {
             _conf = configuration;
+            ConnectionString = _conf.GetConnectionString("Ubigrade2");
         }
         // GET: Noten
         public async Task<ActionResult> Index()

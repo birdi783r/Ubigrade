@@ -22,7 +22,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
         public SchuelerAPIController(IConfiguration configuration)
         {
             _config = configuration;
-            ConnectionString = _config.GetConnectionString("UbiServer");
+            ConnectionString = _config.GetConnectionString("Ubigrade2");
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SchuelerModel>>> GetSchuelers()

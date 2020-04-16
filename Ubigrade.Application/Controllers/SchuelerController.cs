@@ -18,7 +18,7 @@ namespace Ubigrade.Application.Controllers
         public SchuelerController(IConfiguration configuration)
         {
             _config = configuration;
-            ConnectionString = _config.GetConnectionString("UbiServer");
+            ConnectionString = _config.GetConnectionString("Ubigrade2");
         }
         // GET: Schueler
         public async Task<IActionResult> Index()
