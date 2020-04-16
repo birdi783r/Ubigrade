@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Ubigrade.Application.Filters;
 using Ubigrade.Application.Models;
 using Ubigrade.Library.Models;
 using Ubigrade.Library.Processors;
 
 namespace Ubigrade.Application.Controllers.API_Controller
 {
+    [ApiKeyAuth]
     [Route("api/schueler")]
     [ApiController]
     public class SchuelerAPIController : ControllerBase 
