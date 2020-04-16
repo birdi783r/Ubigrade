@@ -90,8 +90,10 @@ namespace Ubigrade.Library.Processors
                 {
                     ListeSchueler.Add(
                         new SchuelerDLModel(
-                            int.Parse(dr[0].ToString().Trim()),
-                            int.Parse(dr[1].ToString().Trim()),
+                            //int.Parse(dr[0].ToString().Trim()),
+                            //int.Parse(dr[1].ToString().Trim()),
+                            dr[0].ToString().Trim(),
+                            dr[1].ToString().Trim(),
                             dr[2].ToString().Trim(),
                             dr[3].ToString().Trim(),
                             dr[4].ToString().Trim(),
@@ -180,7 +182,7 @@ namespace Ubigrade.Library.Processors
 
                 while (dr.Read())
                 {
-                    editschueler = new SchuelerDLModel(int.Parse(dr[0].ToString()), int.Parse(dr[1].ToString()), dr[2].ToString(), dr[3].ToString(), dr[4].ToString(), dr[5].ToString(), int.Parse(dr[6].ToString()));
+                    editschueler = new SchuelerDLModel(/*int.Parse(dr[0].ToString()), int.Parse(dr[1].ToString()),*/dr[0].ToString(), dr[1].ToString(), dr[2].ToString(), dr[3].ToString(), dr[4].ToString(), dr[5].ToString(), int.Parse(dr[6].ToString()));
                 }
                 connection.Close();
 
@@ -215,7 +217,7 @@ namespace Ubigrade.Library.Processors
             }
         }
 
-        public async static Task<List<FaecherDLModel>> LoadSchuelerFaecherAsync(string sql, int id)
+        public async static Task<List<FaecherDLModel>> LoadSchuelerFaecherAsync(string sql, string id)
         {
             List<FaecherDLModel> SchuelerFaecher = new List<FaecherDLModel>();
             using (NpgsqlConnection connection = new NpgsqlConnection(sql))

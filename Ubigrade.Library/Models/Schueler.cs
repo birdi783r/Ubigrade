@@ -6,8 +6,8 @@ namespace Ubigrade.Library.Models
 {
     public class SchuelerDLModel
     {
-        public int Schuelerkennzahl { get; set; }
-        public int Checkpersonnumber { get; set; }
+        public string Schuelerkennzahl { get; set; }
+        public string Checkpersonnumber { get; set; }
         public string NName { get; set; }
         public string VName { get; set; }
         public string Geschlecht { get; set; }
@@ -19,7 +19,7 @@ namespace Ubigrade.Library.Models
         public SchuelerDLModel()
         { }
 
-        public SchuelerDLModel(int skennzahl, int cprnr, string nn, string vn, string g, string e, int sj)
+        public SchuelerDLModel(string skennzahl, string cprnr, string nn, string vn, string g, string e, int sj)
         {
             Schuelerkennzahl = skennzahl;
             Checkpersonnumber = cprnr;
@@ -29,7 +29,7 @@ namespace Ubigrade.Library.Models
             EmailAdresse = e;
             Schuljahr = sj;
         }
-        public SchuelerDLModel(int skennzahl, int cprnr, string nn, string vn, string g, string e, int sj, List<FaecherDLModel> faech)
+        public SchuelerDLModel(string skennzahl, string cprnr, string nn, string vn, string g, string e, int sj, List<FaecherDLModel> faech)
         {
             Schuelerkennzahl = skennzahl;
             Checkpersonnumber = cprnr;

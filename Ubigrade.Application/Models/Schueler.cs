@@ -11,7 +11,7 @@ namespace Ubigrade.Application.Models
         [Display(Name = "Schueler ID:")]
         //[Range(1, 50, ErrorMessage = "Sie müssen einen gültigen Wert eingeben (1-50)")]
         [Required(ErrorMessage = "Geben Sie eine ID")]
-        public int Checkpersonnumber { get; set; }
+        public string Checkpersonnumber { get; set; }
 
         [Display(Name = "Nachname:")]
         [Required(ErrorMessage = "Nachname muss eingegeben werden")]

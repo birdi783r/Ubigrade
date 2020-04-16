@@ -25,7 +25,7 @@ namespace Ubigrade.Application.Controllers
         {
             try
             {
-                var data = await NotenProcessor.LoadNotenAsync("");
+                var data = await NotenProcessor.LoadNotenAsync(ConnectionString);
                 List<NotenModel> ViewListeNoten = new List<NotenModel>();
                 foreach (var item in data)
                 {
