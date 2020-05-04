@@ -7,7 +7,7 @@ namespace Ubigrade.Application.Models
 {
     public class FaecherModel
     {
-        public int SkennZahl { get; set; }
+        public string  SkennZahl { get; set; }
         public string Fachbezeichnung { get; set; }
     }
 }

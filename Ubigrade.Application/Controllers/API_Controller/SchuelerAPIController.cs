@@ -25,6 +25,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
         {
             _config = configuration;
             ConnectionString = _config.GetConnectionString("Ubigrade2");
+            
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SchuelerModel>>> GetSchuelers()
@@ -58,7 +59,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // GET: api/Schueler/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SchuelerModel>> GetSchueler(int id)
+        public async Task<ActionResult<SchuelerModel>> GetSchueler(string id)
         {
             try
             {
@@ -88,7 +89,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<string> PutSchueler(int id, SchuelerDLModel schueler)
+        public async Task<string> PutSchueler(string id, SchuelerDLModel schueler)
         {
             try
             {
@@ -133,7 +134,7 @@ namespace Ubigrade.Application.Controllers.API_Controller
 
         // DELETE: api/Schueler/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<string>> DeleteSchueler(int id)
+        public async Task<ActionResult<string>> DeleteSchueler(string id)
         {
             try
             {

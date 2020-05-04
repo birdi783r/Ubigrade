@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Ubigrade.Library.Processors;
 using Ubigrade.Library.Google;
 using Microsoft.Extensions.Configuration;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Responses;
 
 namespace Ubigrade.Application.Areas.Identity.Pages.Account
 {
@@ -243,6 +245,7 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                             string gender = "";
                             string userid = "";
                             bool IsTeacher = false;
+                            var claims = await _userManager.GetClaimsAsync(user);
                             var x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.GivenName));
                             x = await _userManager.AddClaimAsync(user,
@@ -251,13 +254,6 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                                 info.Principal.FindFirst(ClaimTypes.Surname));
                             x = await _userManager.AddClaimAsync(user,
                                 info.Principal.FindFirst(ClaimTypes.NameIdentifier));
-                            
-
-                            //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
-                            //var u = await GetGoogleData.GetClassroomUserProfile(credential);
-                            //if(u.VerifiedTeacher.Value)
-                            //    x = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role,"Teacher"));
-                            var claims = await _userManager.GetClaimsAsync(user);
                             foreach (var c in claims)
                             {
                                 if (c.Type == ClaimTypes.NameIdentifier)
@@ -284,10 +280,21 @@ namespace Ubigrade.Application.Areas.Identity.Pages.Account
                         var props = new AuthenticationProperties();
                         props.StoreTokens(info.AuthenticationTokens);
                         props.IsPersistent = true;
+                        //TokenResponse tok = new TokenResponse
+                        //{
+                        //    AccessToken = props.GetTokenValue("accesstoken"),
+                        //    TokenType = "Bearer"
+                        //};
+                        //var credential = GoogleProviderHelper.CreateUserCredential(info.Principal);
+                        //var u = await GetGoogleData.GetClassroomUserProfile(credential);
+                        //if (u.VerifiedTeacher.Value)
+                        //x = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Teacher"));
+
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         //////
-
+                        var dd = info.Principal;
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

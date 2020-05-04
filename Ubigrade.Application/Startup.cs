@@ -66,15 +66,11 @@ namespace Ubigrade.Application
                    }
                    options.AccessType = "offline";
                    options.SaveTokens = true;
-                   //options.Events = new OAuthEvents
-                   //{
-                   //    OnCreatingTicket = context =>
-                   //    {
-                   //        var language = context.User.tryget
-                   //        context.Identity.AddClaim(new Claim("urn:language", language));
-                   //        return Task.FromResult(0);
-                   //    }
-                   //};
+               });
+            services.AddAuthorization(options =>
+               {
+                   options.AddPolicy("TeacherPolicy", policy => policy.RequireClaim("Role","Teacher"));
+                   options.AddPolicy("StudentPolicy", policy => policy.RequireClaim("Role","Student"));
                });
         }
 
@@ -96,7 +92,7 @@ namespace Ubigrade.Application
             if (env.IsProduction())
             {
                 //app.UseHostFiltering();
-            } 
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

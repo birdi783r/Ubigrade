@@ -102,9 +102,11 @@ namespace Ubigrade.Library.Google
             });
             UserProfilesResource.GetRequest request = service.UserProfiles.Get(credential.UserId);
             var result = await request.ExecuteAsync();
-
             return result;
         }
+
+
+
         public async static Task<User> GetOrgUnits(UserCredential credential, string userid)
         {
             var service = new DirectoryService(new BaseClientService.Initializer

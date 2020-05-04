@@ -12,9 +12,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkpersonnumber)
-            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Checkpersonnumber)
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.NName)
             </th>
@@ -34,32 +34,33 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Checkpersonnumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Geschlecht)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAdresse)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Schuljahr)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Checkpersonnumber }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Checkpersonnumber }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Checkpersonnumber })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Checkpersonnumber)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.NName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Geschlecht)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailAdresse)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Schuljahr)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Checkpersonnumber }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Checkpersonnumber }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Checkpersonnumber })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
